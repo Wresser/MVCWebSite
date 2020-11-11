@@ -1,0 +1,167 @@
+﻿@model MVCWebSite.Models.ViewModels.ViewModelRegister
+@{
+    ViewBag.Title = "Index";
+}
+
+@using (Html.BeginForm("Verify", "Register", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+                <label>Фотографія (JPEG/PNG, min 100x150, max 200x300)</label>
+                <input type="file" name="image" class="form-group" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label>Ім'я</label>
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", @type = "text" })
+            </div>
+            <div class="col-md-4 form-group">
+                <label>Прізвище</label>
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", @type = "text" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label>Логін</label>
+                @Html.TextBoxFor(m => m.Login, new { @class = "form-control", @type = "text" })
+            </div>
+            <div class="col-md-4 form-group">
+                <label>E-mail</label>
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @type = "email" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label>Пароль</label>
+                @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @type = "password", @id = "pass1", @oninput = "ComparePasswords(event)" })
+            </div>
+            <div class="col-md-4 form-group">
+                <label style="visibility:hidden">d</label>
+                <input type="password" class="form-control" id="pass2" oninput="ComparePasswords(event)" />
+            </div>
+        </div>
+
+        <div class="row">
+            @foreach (MVCWebSite.Models.Profession profession in ViewBag.Professions)
+            {
+                <div class="col-md-12">
+                    @{
+                        if (profession.ProfessionName == "Викладач")
+                        {
+                            @Html.RadioButtonFor(m => m.ProfessionID, profession.ID, new { @onclick = "RadioButtonChange(event)", @checked = "checked" });
+                        }
+                        else
+                        {
+                            @Html.RadioButtonFor(m => m.ProfessionID, profession.ID, new { @onclick = "RadioButtonChange(event)" });
+                        }
+                    }
+
+                    @profession.ProfessionName
+                </div>
+            }
+
+            <div class="col-md-3 add-margin">
+                @Html.CheckBoxFor(m => m.IsSport, new { @id = $"button1" })
+                @ViewBag.Achievements[0]
+            </div>
+
+            <div class="col-md-3 add-margin">
+                @Html.CheckBoxFor(m => m.IsCandidate, new { @id = $"button2" })
+                @ViewBag.Achievements[1]
+            </div>
+
+            <div class="col-md-3 add-margin">
+                @Html.CheckBoxFor(m => m.IsDoctor, new { @id = $"button3" })
+                @ViewBag.Achievements[2]
+            </div>
+
+            <div class="col-md-4 form-group add-margin">
+                <label>Курс</label>
+                @Html.DropDownListFor(m => m.Course, new SelectList(ViewBag.Courses, "Value", "Text"), new { @class = "form-control", @id = "courses", @disabled="disabled" })
+            </div>
+
+            <div class="col-md-4 form-group add-margin">
+                <label>Факультет</label>
+                @Html.DropDownListFor(m => m.FacultyID, new SelectList(ViewBag.Faculties, "ID", "FacultyName"), new { @class = "form-control", @id = "faculties" })
+            </div>
+
+            <div class="col-md-12 form-group add-margin">
+                <label>Структурний підрозділ</label>
+                @Html.DropDownListFor(m => m.DepartmentID, new SelectList(ViewBag.Departments, "ID", "DepartmentName"), new { @class = "form-control", @id = "departments", @disabled="disabled" })
+            </div>
+
+            <input type="submit" class="btn btn-primary button-style add-margin col-md-4" disabled value="Далі" id="next"/>
+            <a class="btn btn-primary button-style add-margin col-md-4" href="@Url.Action("Index", "Home")">Назад</a>
+            <p class="login-error col-md-12" id="pass_warning" style="visibility:hidden">Паролі мають співпадати</p>
+
+        </div>
+
+    </div>
+}
+
+@section scripts {
+
+    <script>
+        function RadioButtonChange(e) {
+            let candidateBut = $("#button2");
+            let doctorBut = $("#button3");
+            let courses = $("#courses");
+            let faculties = $("#faculties");
+            let departments = $("#departments");
+            let button = e.target.value;
+
+            switch (button) {
+                case '1':
+                    candidateBut.prop("disabled", true);
+                    doctorBut.prop("disabled", true);
+                    candidateBut.prop("checked", false);
+                    doctorBut.prop("checked", false);
+                    
+                    courses.prop("disabled", false);
+                    faculties.prop("disabled", false);
+                    departments.prop("disabled", true);
+                    break;
+                case '2':
+                    candidateBut.prop("disabled", false);
+                    doctorBut.prop("disabled", false);
+
+                    courses.prop("disabled", true);
+                    faculties.prop("disabled", false);
+                    departments.prop("disabled", true);
+                    break;
+                case '3':
+                    candidateBut.prop("disabled", false);
+                    doctorBut.prop("disabled", true);
+                    doctorBut.prop("checked", false);
+
+                    courses.prop("disabled", true);
+                    faculties.prop("disabled", true);
+                    departments.prop("disabled", false);
+                    break;
+            }
+        }
+
+        function ComparePasswords(e) {
+            let pass1 = $("#pass1");
+            let pass2 = $("#pass2");
+            let next = $("#next");
+            let warning = $("#pass_warning");
+
+            if (pass1.text.length > 0 && pass1.val() == pass2.val()) {
+                next.prop("disabled", false);
+                warning.css("visibility", "hidden");
+            }
+            else {
+                next.prop("disabled", true);
+                warning.css("visibility", "visible");
+            }
+        }
+    </script>
+} 
+

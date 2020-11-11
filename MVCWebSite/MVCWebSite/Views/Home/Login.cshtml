@@ -1,0 +1,20 @@
+﻿@model MVCWebSite.Models.User
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<div class="container">
+    <div class="row">
+        <h2 class="col-md-12">
+            Вітаємо Вас на нашому сайті,
+        </h2>
+        <h2 class="col-md-12">
+            @Model.FirstName @Model.LastName!
+        </h2>
+        <img class="image col-md-12" src='@Url.Action( "Show", "Home", new { id = Model.ID })' />
+        <p class="col-md-12">Логін ..... @Model.Login</p>
+        <p class="col-md-12">E-mail .... @Model.Email</p>
+        <a class="btn btn-primary button-style add-margin col-md-12" href="@Url.Action("Index", "Home")">Вихід</a>
+    </div>
+</div>

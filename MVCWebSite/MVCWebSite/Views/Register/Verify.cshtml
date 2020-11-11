@@ -1,0 +1,50 @@
+﻿@model MVCWebSite.Models.ViewModels.ViewModelVerify
+@{
+    ViewBag.Title = "Verify";
+}
+
+@using (Html.BeginForm("Finish", "Register", FormMethod.Post))
+{
+<div class="row">
+    @{
+        if (!ViewBag.Error)
+        {
+            <div class="col-md-12">
+                <h2>ВЕРИФІКАЦІЯ АДРЕСИ ЕЛЕКТРОННОЇ ПОШТИ</h2>
+                <p>На Вашу адресу направлений одноразовий пароль.</p>
+                <p>Введіть його в поле і натисніть "Зареєструвати":</p>
+                @Html.HiddenFor(m => m.ID)
+                @Html.HiddenFor(m => m.GeneratedPass)
+                @Html.EditorFor(m => m.UserPass, new { @class = "form-control", @type = "text" })
+            </div>
+            <input type="submit" class="btn btn-primary button-style add-margin col-md-4" disabled value="Зареєструвати" id="next" />
+        }
+        else
+        {
+            <p class="col-md-12 login-error">Сталася помилка при спробі надіслати на Вашу пошту одноразовий пароль</p>
+        }
+    }
+    <a class="btn btn-primary button-style add-margin col-md-4" href="@Url.Action("Index", "Home")">Назад</a>
+</div>
+}
+@section scripts {
+    <script>
+        let pass = $("#UserPass");
+        pass.on("input", AllowNext);
+
+
+        function AllowNext() {
+            let next = $("#next");
+            let pass = $("#UserPass")
+
+            console.log(pass.val());
+
+            if (pass.val().length == 7) {
+                next.prop("disabled", false);
+            }
+            else {
+                next.prop("disabled", true);
+            }
+        }
+    </script>
+}

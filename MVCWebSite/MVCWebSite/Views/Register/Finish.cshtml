@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Finish";
+}
+
+<div class="container">
+    <div class="row">
+        @{
+            if (ViewBag.Correct)
+            {
+                <h2 class="col-md-12" style="color: green">РЕЄСТРАЦІЮ УСПІШНО ЗАВЕРШЕНО!</h2>
+            }
+            else
+            {
+                <h2 class="col-md-12" style="color: red">ПОМИЛКА РЕЄСТРАЦІЇ!</h2>
+            }
+            <a class="btn btn-primary button-style add-margin col-md-12" href="@Url.Action("Index", "Home")">На головну</a>
+        }
+    </div>
+</div>
+
+

@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="MVCWebSiteModelStoreContainer" CdmEntityContainer="Entities">
+    <EntitySetMapping Name="Achievements">
+      <EntityTypeMapping TypeName="MVCWebSiteModel.Achievement">
+        <MappingFragment StoreEntitySet="Achievements">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="AchievementName" ColumnName="AchievementName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Departments">
+      <EntityTypeMapping TypeName="MVCWebSiteModel.Department">
+        <MappingFragment StoreEntitySet="Departments">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Faculties">
+      <EntityTypeMapping TypeName="MVCWebSiteModel.Faculty">
+        <MappingFragment StoreEntitySet="Faculties">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="FacultyName" ColumnName="FacultyName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Professions">
+      <EntityTypeMapping TypeName="MVCWebSiteModel.Profession">
+        <MappingFragment StoreEntitySet="Professions">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="ProfessionName" ColumnName="ProfessionName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserAchievements">
+      <EntityTypeMapping TypeName="MVCWebSiteModel.UserAchievement">
+        <MappingFragment StoreEntitySet="UserAchievements">
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="AchievementID" ColumnName="AchievementID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="MVCWebSiteModel.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Login" ColumnName="Login" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="ProfessionID" ColumnName="ProfessionID" />
+          <ScalarProperty Name="Course" ColumnName="Course" />
+          <ScalarProperty Name="FacultyID" ColumnName="FacultyID" />
+          <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+          <ScalarProperty Name="Avatar" ColumnName="Avatar" />
+          <ScalarProperty Name="IsValidated" ColumnName="IsValidated" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
