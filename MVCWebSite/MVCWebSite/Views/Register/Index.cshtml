@@ -123,22 +123,6 @@
             }
         });
 
-        //user is "finished typing," do something
-        function doneTyping() {
-
-            let next = $("#next");
-            
-
-            if (exists) {
-                next.prop("disabled", true);
-                warning.css("visibility", "visible");
-            }
-            else {
-                ComparePasswords();
-                warning.css("visibility", "hidden");
-            }
-        }
-
         async function CheckLogin() {
             let actionUrl = '@Url.Action("GetUsernames", "Register")';
             let login = $("#Login").val();
