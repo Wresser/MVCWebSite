@@ -39,11 +39,11 @@
         <div class="row">
             <div class="col-md-4 form-group">
                 <label>Пароль</label>
-                @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @type = "password", @id = "pass1", @oninput = "ComparePasswords(event)" })
+                @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @type = "password", @id = "pass1", @oninput = "Validate()" })
             </div>
             <div class="col-md-4 form-group">
                 <label style="visibility:hidden">d</label>
-                <input type="password" class="form-control" id="pass2" oninput="ComparePasswords(event)" />
+                <input type="password" class="form-control" id="pass2" oninput="Validate()" />
             </div>
         </div>
 
@@ -83,7 +83,7 @@
 
             <div class="col-md-4 form-group add-margin">
                 <label>Курс</label>
-                @Html.DropDownListFor(m => m.Course, new SelectList(ViewBag.Courses, "Value", "Text"), new { @class = "form-control", @id = "courses", @disabled="disabled" })
+                @Html.DropDownListFor(m => m.Course, new SelectList(ViewBag.Courses, "Value", "Text"), new { @class = "form-control", @id = "courses", @disabled = "disabled" })
             </div>
 
             <div class="col-md-4 form-group add-margin">
@@ -93,12 +93,13 @@
 
             <div class="col-md-12 form-group add-margin">
                 <label>Структурний підрозділ</label>
-                @Html.DropDownListFor(m => m.DepartmentID, new SelectList(ViewBag.Departments, "ID", "DepartmentName"), new { @class = "form-control", @id = "departments", @disabled="disabled" })
+                @Html.DropDownListFor(m => m.DepartmentID, new SelectList(ViewBag.Departments, "ID", "DepartmentName"), new { @class = "form-control", @id = "departments", @disabled = "disabled" })
             </div>
 
-            <input type="submit" class="btn btn-primary button-style add-margin col-md-4" disabled value="Далі" id="next"/>
+            <input type="submit" class="btn btn-primary button-style add-margin col-md-4" disabled value="Далі" id="next" />
             <a class="btn btn-primary button-style add-margin col-md-4" href="@Url.Action("Index", "Home")">Назад</a>
             <p class="login-error col-md-12" id="pass_warning" style="visibility:hidden">Паролі мають співпадати</p>
+            <p class="login-error col-md-12" id="login_warning" style="visibility:hidden">Цей логін вже існує, оберіть інший</p>
 
         </div>
 
@@ -108,6 +109,50 @@
 @section scripts {
 
     <script>
+
+        var typingTimer;                //timer identifier
+        var doneTypingInterval = 3000;  //time in ms (5 seconds)
+
+        let login = $("#Login");
+
+        //on keyup, start the countdown
+        login.keyup(function () {
+            clearTimeout(typingTimer);
+            if (login.val()) {
+                typingTimer = setTimeout(Validate, doneTypingInterval);
+            }
+        });
+
+        //user is "finished typing," do something
+        function doneTyping() {
+
+            let next = $("#next");
+            
+
+            if (exists) {
+                next.prop("disabled", true);
+                warning.css("visibility", "visible");
+            }
+            else {
+                ComparePasswords();
+                warning.css("visibility", "hidden");
+            }
+        }
+
+        async function CheckLogin() {
+            let actionUrl = '@Url.Action("GetUsernames", "Register")';
+            let login = $("#Login").val();
+            let exists = false;
+
+            await $.getJSON(actionUrl, function (response) {
+                if (response != null) {
+                    exists = response.some(name => name == login);
+                }
+            });
+
+            return exists;
+        }
+
         function RadioButtonChange(e) {
             let candidateBut = $("#button2");
             let doctorBut = $("#button3");
@@ -122,7 +167,7 @@
                     doctorBut.prop("disabled", true);
                     candidateBut.prop("checked", false);
                     doctorBut.prop("checked", false);
-                    
+
                     courses.prop("disabled", false);
                     faculties.prop("disabled", false);
                     departments.prop("disabled", true);
@@ -147,19 +192,35 @@
             }
         }
 
-        function ComparePasswords(e) {
+        async function Validate() {
             let pass1 = $("#pass1");
             let pass2 = $("#pass2");
             let next = $("#next");
             let warning = $("#pass_warning");
+            let l_warning = $("#login_warning");
+            let blocked = false;
 
-            if (pass1.text.length > 0 && pass1.val() == pass2.val()) {
+            if (pass1.val().length > 0 && pass1.val() == pass2.val()) {
                 next.prop("disabled", false);
                 warning.css("visibility", "hidden");
             }
             else {
+                if (pass1.val().length > 0) {
+                    warning.css("visibility", "visible");
+                }
                 next.prop("disabled", true);
-                warning.css("visibility", "visible");
+                blocked = true;
+            }
+
+            if (await CheckLogin()) {
+                next.prop("disabled", true);
+                l_warning.css("visibility", "visible");
+            }
+            else {
+                l_warning.css("visibility", "hidden");
+                if (!blocked) {
+                    next.prop("disabled", false);
+                }
             }
         }
     </script>

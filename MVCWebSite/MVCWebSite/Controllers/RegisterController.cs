@@ -146,5 +146,11 @@ namespace MVCWebSite.Controllers
                 sw.WriteLine(DateTime.Now + " | " + message);
             }
         }
+
+        public ActionResult GetUsernames()
+        {
+            var users = db.Users.Select(u => u.Login).ToArray();
+            return Json(users, JsonRequestBehavior.AllowGet);
+        }
     }
 }
